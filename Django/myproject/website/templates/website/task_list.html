@@ -1,0 +1,10 @@
+{% extends "website/base.html" %}
+{% block main %}
+<h2>タスク一覧</h2>
+<ol>
+    {% for task in object_list %}
+    <li><a href="{% url 'detail' task.id %}">{{ task.name }}</a></li>
+    {% endfor %}
+</ol>
+<p><a href="{% url 'create' %}">タスク新規作成</a></p>
+{% endblock %}
