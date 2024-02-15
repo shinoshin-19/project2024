@@ -27,7 +27,7 @@
         <td>{{ project_info.remaining_days }} </td>
         <td><a href="{% url 'userlist' %}">{{ project_info.task_count }}</a></td>
         <td><a href="{% url 'project_list' %}">{{ project_info.project.note }}</a></td>
-        <td><a href="{% url 'project_list' %}">{{ project_info.project.user_id }}</a></td>
+        <td><a href="{% url 'project_list' %}">{{ project_info.project.user.name }}</a></td>
         <td><a href="{% url 'project_list' %}">{{ project_info.project.status_id }}</a></td>
         <td><a href="{% url 'project_list' %}">{{ project_info.project.created }}</a></td>
         <td><a href="{% url 'project_list' %}">{{ project_info.project.updated }}</a></td>
