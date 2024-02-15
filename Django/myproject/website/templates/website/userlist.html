@@ -1,0 +1,32 @@
+{% extends "website/base.html" %}
+{% block main %}
+<h2>User List</h2>
+<ol>
+    {% for user in user_with_counts %}
+    <li><a href="{% url 'userlist' %}">{{ user.name }}:{{ user.project_count }}:{{ user.task_count }}</a></li>
+    {% endfor %}
+</ol>
+<br>
+<br>
+
+<table border="1">
+
+    <tr>
+        <th>ユーザー名</th>
+        <th>プロジェクト数</th>
+        <th>タスク数</th>
+    </tr>
+    
+        {% for user in user_with_counts %}
+        <tr>
+            <td><a href="{% url 'userlist' %}">{{ user.name }}</a></td>
+            <td>{{ user.project_count }}</td>
+            <td>{{ user.task_count }}</td>
+        </tr>
+        {% endfor %}
+    
+
+</table>
+
+<p><a href="{% url 'create' %}">タスク新規作成</a></p>
+{% endblock %}

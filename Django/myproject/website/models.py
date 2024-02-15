@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 
 # Create your models here.
 
-class Creater(models.Model):
+class User(models.Model):
     name = models.CharField(
         max_length = 10,
         blank = False,
@@ -15,17 +15,17 @@ class Creater(models.Model):
     
 
 class Status(models.Model):
-    name = models.CharField(
+    title = models.CharField(
         max_length = 10,
         blank = False,
         null = False,
     )
 
     def __str__(self):
-        return self.name
+        return self.title
     
 class Project(models.Model):
-    name = models.CharField(
+    title = models.CharField(
         max_length = 30,
         blank = False,
         null = False,
@@ -59,21 +59,29 @@ class Project(models.Model):
 
     status = models.ForeignKey(
         Status,
-        on_delete = models.CASCADE
+        on_delete = models.CASCADE,
+        blank = True,
+        null = True,
     )
 
-    creater = models.ForeignKey(
-        Creater,
-        on_delete = models.CASCADE
+    user = models.ForeignKey(
+        User,
+        on_delete = models.CASCADE,
+        blank = True,
+        null = True
     )
  
 
     def __str__(self):
-        return self.name
+        return self.title
+    
+    def get_absolute_url(self):
+        # /detail/1/
+        return reverse_lazy("detailproject", args=[self.id])
 
 
 class Task(models.Model):
-    name = models.CharField(
+    title = models.CharField(
         max_length = 30,
         blank = False,
         null = False,
@@ -112,16 +120,20 @@ class Task(models.Model):
 
     project = models.ForeignKey(
         Project,
-        on_delete = models.CASCADE
+        on_delete = models.CASCADE,
+        blank = True,
+        null = True
     )
 
     status = models.ForeignKey(
         Status,
-        on_delete = models.CASCADE
+        on_delete = models.CASCADE,
+        blank = True,
+        null = True
     )
 
     def __str__(self):
-        return self.name
+        return self.title
     
     def get_absolute_url(self):
         # /detail/1/

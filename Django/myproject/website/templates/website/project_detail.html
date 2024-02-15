@@ -1,0 +1,43 @@
+{% extends "website/base.html" %}
+{% load l10n %}
+{% block main %}
+<h2>{{ project.title }}詳細</h2>
+
+<div>
+    <table class="table table-hover" border="1">
+        <thead>
+        <tr>
+            <th>プロジェクトID</th>
+            <th>プロジェクト名</th>
+            <th>期限</th>
+            <th>残日数</th>
+            <th>タスク数</th>
+            <th>備考</th>
+            <th>ユーザー名</th>
+            <th>ステイタス</th>
+            <th>作成日</th>
+            <th>更新日</th>
+        </tr>
+        </thead>
+    
+        <tbody>
+        <tr>
+            <td>{{ project.id }}</td>
+            <td>{{ project.title }}</td>
+            <td>{{ project.deadline }}</td>
+            <td>{{ remaining_days }} </td>
+            <td>{{ task_count }}</td>
+            <td>{{ project.note }}</td>
+            <td>{{ project.user_id }}</td>
+            <td>{{ project.status_id }}</td>
+            <td>{{ project.created }}</td>
+            <td>{{ project.updated }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+<p><a href="{% url 'update' project.pk %}">編集</a></p>
+<p><a href="{% url 'delete' project.pk %}">削除</a></p>
+{% endblock %}

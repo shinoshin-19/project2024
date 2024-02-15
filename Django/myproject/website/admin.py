@@ -3,8 +3,8 @@ from . import models
 
 # Register your models here.
 
-@admin.register(models.Creater)
-class CreaterAdmin(admin.ModelAdmin):
+@admin.register(models.User)
+class UserAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(models.Status)

@@ -2,7 +2,7 @@
 
 {% block main %}
 <h2>削除確認</h2>
-<p>{{ object.name }}を本当に削除してもよろしいですか？</p>
+<p>{{ object.title }}を本当に削除してもよろしいですか？</p>
 <form method="post">
     {% csrf_token %}
     <input type="submit" value="削除" class="btn btn-danger" />
