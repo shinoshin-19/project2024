@@ -1,8 +1,10 @@
 {% extends "website/base.html" %}
+{% load l10n %}
 {% block main %}
-<h2>タスク一覧</h2>
+<h2>TOP</h2>
 
-<table class = "table table-hover" border="1">
+<div>
+    <table class="table table-hover" border="1">
     <thead>
         <tr>
             <th>タスクID</th>
@@ -15,7 +17,6 @@
             <th>優先度</th>
             <th>作成日</th>
             <th>更新日</th>
-
         </tr>
     </thead>
 
@@ -23,7 +24,6 @@
         <!-- task_info_listをfor文で表示 -->
         {% for task_info in task_info_list %}
         {% if task_info.task.id %}
-    
         <tr>
             <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.id }}</a></td>
             <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.title }}</a></td>
@@ -46,7 +46,9 @@
     </tbody>
 
 </table>
+</div>
 
 
-<p><a href="{% url 'create' %}">タスク新規作成</a></p>
+
+
 {% endblock %}

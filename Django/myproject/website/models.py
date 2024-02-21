@@ -21,6 +21,19 @@ class Status(models.Model):
         null = False,
     )
 
+
+class Priority(models.Model):
+    title = models.CharField(
+        max_length = 10,
+        blank = False,
+        null = False,
+    )
+
+    priority = models.IntegerField(
+        blank = True,
+        null = True,
+    )
+
     def __str__(self):
         return self.title
     
@@ -132,11 +145,19 @@ class Task(models.Model):
         null = True
     )
 
+    priority = models.ForeignKey(
+        Priority,
+        on_delete = models.CASCADE,
+        blank = True,
+        null = True
+
+    )
+
     def __str__(self):
         return self.title
     
     def get_absolute_url(self):
         # /detail/1/
-        return reverse_lazy("detail", args=[self.id])
+        return reverse_lazy("detailtask", args=[self.id])
     
 

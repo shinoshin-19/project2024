@@ -2,7 +2,7 @@
 {% block main %}
 <h2>プロジェクト一覧</h2>
 
-<table class="table table-hover">
+<table class="table table-hover" border="1">
     <thead>
     <tr>
         <th>プロジェクトID</th>
@@ -10,6 +10,7 @@
         <th>期限</th>
         <th>残日数</th>
         <th>タスク数</th>
+        <th>作業時間</th>
         <th>備考</th>
         <th>ユーザー名</th>
         <th>ステイタス</th>
@@ -21,16 +22,17 @@
     <tbody>
     {% for project_info in project_info_list %}
     <tr>
-        <td><a href="{% url 'project_list' %}">{{ project_info.project.id }}</a></td>
-        <td><a href="{% url 'project_list' %}">{{ project_info.project.title }}</a></td>
-        <td><a href="{% url 'project_list' %}">{{ project_info.project.deadline }}</a></td>
-        <td>{{ project_info.remaining_days }} </td>
-        <td><a href="{% url 'userlist' %}">{{ project_info.task_count }}</a></td>
-        <td><a href="{% url 'project_list' %}">{{ project_info.project.note }}</a></td>
-        <td><a href="{% url 'project_list' %}">{{ project_info.project.user.name }}</a></td>
-        <td><a href="{% url 'project_list' %}">{{ project_info.project.status_id }}</a></td>
-        <td><a href="{% url 'project_list' %}">{{ project_info.project.created }}</a></td>
-        <td><a href="{% url 'project_list' %}">{{ project_info.project.updated }}</a></td>
+        <td><a href="{% url 'detailproject' project_info.project.id %}">{{ project_info.project.id }}</a></td>
+        <td><a href="{% url 'detailproject' project_info.project.id %}">{{ project_info.project.title }}</a></td>
+        <td><a href="{% url 'detailproject' project_info.project.id %}">{{ project_info.project.deadline }}</a></td>
+        <td><a href="{% url 'detailproject' project_info.project.id %}">{{ project_info.remaining_days }} </td>
+        <td><a href="{% url 'project_tasklist' project_info.project.id %}">{{ project_info.task_count }}</a></td>
+        <td><a href="{% url 'detailproject' project_info.project.id %}">{{ project_info.total_workload }}</a></td>
+        <td><a href="{% url 'detailproject' project_info.project.id %}">{{ project_info.project.note }}</a></td>
+        <td><a href="{% url 'detailproject' project_info.project.id %}">{{ project_info.project.user.name }}</a></td>
+        <td><a href="{% url 'detailproject' project_info.project.id %}">{{ project_info.project.status.title }}</a></td>
+        <td><a href="{% url 'detailproject' project_info.project.id %}">{{ project_info.project.created }}</a></td>
+        <td><a href="{% url 'detailproject' project_info.project.id %}">{{ project_info.project.updated }}</a></td>
     </tr>
     {% endfor %}
     </tbody>

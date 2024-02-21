@@ -7,14 +7,18 @@ from . import models
 class UserAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(models.Status)
-class StatusAdmin(admin.ModelAdmin):
-    pass
-
 @admin.register(models.Project)
 class ProjectAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(models.Task)
 class TaskAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(models.Status)
+class StatusAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(models.Priority)
+class PriorityAdmin(admin.ModelAdmin):
     pass
