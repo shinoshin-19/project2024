@@ -3,9 +3,10 @@ from django.urls import path
 from .views import *
 from . import views
 
+
 urlpatterns = [
     # path('', IndexView.as_view()),
-    path('', views.TopIndex.as_view(),name = "index"),
+    path('index', views.TopIndex.as_view(), name="index"),
     path('user', views.UserIndex.as_view(),name = "user"),
     path('project', views.ProjectIndex.as_view(),name = "project_list"),
     path('task', views.TaskIndex.as_view(),name = "task_list"),
@@ -20,5 +21,8 @@ urlpatterns = [
     path('userlist',views.UserList,name = "userlist"),
     # プロジェクトのIDを渡して、そのプロジェクトに関連付けられたタスクを表示するURL
     path('project/<pk>/taskslist/', ProjectTaskListView.as_view(),name='project_tasklist'),
+    path('signup/', SignupView.as_view(), name='signup'),
+    path('login/', views.LoginView.as_view(), name="login"),
+    
 
 ]
