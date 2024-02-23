@@ -12,20 +12,20 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import login, authenticate
 from .forms import SignUpForm
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView as BaseLoginView
+from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView
 from .forms import SignUpForm, LoginFrom # ログインフォームをimport
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 
-
-
-class TopIndex(ListView):
+class TopIndex(LoginRequiredMixin,ListView):
     template_name = "website/index.html"
+    login_url = '/login'#ログインしていないユーザーのリダイレクト先ログインページ
     model = Task
 
-    def get_context_data(self,**kwarge):
+    def get_context_data(self,**kwargs):
 
-        context = super().get_context_data(**kwarge)
+        context = super().get_context_data(**kwargs)
 
         tasks = Task.objects.all().order_by('-priority_id')
         # タスクごとの残り日数を計算してコンテキストに追加する
@@ -55,18 +55,13 @@ class TopIndex(ListView):
 
 
 
-
-
-
-
-
-class Index(ListView):
+class Index(LoginRequiredMixin,ListView):
 # 一覧するモデルを指定する -> 'object_list'で取得可能
     model = Task
 
 
 # ListViewは、一覧を簡単に作るためのView
-class UserIndex(ListView,):
+class UserIndex(LoginRequiredMixin,ListView):
     # 一覧するモデルを指定する -> 'object_list'で取得可能
     # template_name = "website/user_list.html"
     model = User
@@ -82,7 +77,7 @@ class UserIndex(ListView,):
 
 
 
-class ProjectIndex(ListView):
+class ProjectIndex(LoginRequiredMixin,ListView):
     # 一覧するモデルを指定する -> 'object_list'で取得可能
     model = Project
 
@@ -121,7 +116,8 @@ class ProjectIndex(ListView):
         return context
     
 
-class TaskIndex(ListView):
+
+class TaskIndex(LoginRequiredMixin,ListView):
     # 一覧するモデルを指定する -> 'object_list'で取得可能
     model = Task
 
@@ -165,7 +161,7 @@ class TaskIndex(ListView):
 
 
 # DetailViewは詳細を簡単に作るためのView
-class DetailProject(DetailView):
+class DetailProject(LoginRequiredMixin,DetailView):
     # 詳細表示するモデルを指定 -> 'object'で取得可能
     model = Project
 
@@ -202,7 +198,8 @@ class Detail(DetailView):
     model = Task
 """
 
-class TaskDetail(DetailView):
+
+class TaskDetail(LoginRequiredMixin,DetailView):
     # 詳細表示するモデルを指定 -> 'object'で取得可能
     model = Task
 
@@ -232,7 +229,9 @@ class TaskDetail(DetailView):
         return context
     
 
-class ProjectTaskListView(ListView):
+
+
+class ProjectTaskListView(LoginRequiredMixin,ListView):
     model = Task
     template_name = 'website/project_tasklist.html'  # project_tasklist.html を使用する
 
@@ -270,25 +269,29 @@ class ProjectTaskListView(ListView):
 
 
 # CreateViewは、新規作成画面を簡単に作るためのView
-class CreateProject(CreateView):
+class CreateProject(LoginRequiredMixin,CreateView):
     model = Project
 
     # 編集対象にするフィールド
     fields = ["title","deadline","note","status","user"]
 
 
-class Create(CreateView):
+
+class Create(LoginRequiredMixin,CreateView):
     model = Task
 
     # 編集対象にするフィールド
     fields = ["title","deadline","note","status","project", "workload","priority"]
 
-class Update(UpdateView):
+
+
+class Update(LoginRequiredMixin,UpdateView):
     model = Task
     fields = ["title","deadline","note","status","project", "workload","priority"]
     
 
-class Delete(DeleteView):
+
+class Delete(LoginRequiredMixin,DeleteView):
     model = Task
 
     # 削除したあとに移動する先（トップページ）
@@ -300,6 +303,7 @@ def UserList(request):
         task_count=Count('project__task', distinct=True)
     )
     return render(request, 'website/userlist.html', {'user_with_counts': user_with_counts})
+
 
 
 class SignupView(CreateView):
@@ -318,7 +322,17 @@ class SignupView(CreateView):
 
         return response
 
+
 # ログインビューを作成
+
 class LoginView(BaseLoginView):
     form_class = LoginFrom
     template_name = "website/login.html"
+
+
+# LogoutViewを追加
+class LogoutView(BaseLogoutView):
+
+    success_url = '/login'
+
+
