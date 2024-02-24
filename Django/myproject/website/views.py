@@ -95,21 +95,6 @@ class TopIndex(LoginRequiredMixin,ListView):
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class Index(LoginRequiredMixin,ListView):
 # 一覧するモデルを指定する -> 'object_list'で取得可能
     model = Task
@@ -136,11 +121,20 @@ class ProjectIndex(LoginRequiredMixin,ListView):
     # 一覧するモデルを指定する -> 'object_list'で取得可能
     model = Project
 
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            # スーパーユーザーはすべてのタスクを取得
+            return Project.objects.all()
+        else:
+            # 一般ユーザーは自分のタスクのみを取得
+            return Project.objects.filter(user_id=self.request.user.id)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         # プロジェクトの一覧を取得
-        projects = Project.objects.all()
+        projects = self.get_queryset()
 
         # プロジェクトごとの残り日数を計算してコンテキストに追加
         today = datetime.now().date()
@@ -176,12 +170,21 @@ class TaskIndex(LoginRequiredMixin,ListView):
     # 一覧するモデルを指定する -> 'object_list'で取得可能
     model = Task
 
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            # スーパーユーザーはすべてのタスクを取得
+            return Task.objects.all()
+        else:
+            # 一般ユーザーは自分のタスクのみを取得
+            return Task.objects.filter(project__user=self.request.user)
+        
+
     # データを結合させる
     def get_context_data(self,**kwargs):
 
         context = super().get_context_data(**kwargs)
 
-        tasks = Task.objects.all()
+        tasks = self.get_queryset()
 
         # タスクごとの残り日数を計算してコンテキストに追加する
         # 今日の日付を抽出
