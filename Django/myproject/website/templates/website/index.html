@@ -24,6 +24,7 @@
         <!-- task_info_listをfor文で表示 -->
         {% for task_info in task_info_list %}
         {% if task_info.task.id %}
+        {% if user.is_superuser or task_info.task.project.user == user %}
         <tr>
             <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.id }}</a></td>
             <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.title }}</a></td>
@@ -39,6 +40,7 @@
             <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.created }}</a></td>
             <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.updated }}</a></td>
         </tr>
+        {% endif %}
         {% else %}
         No ID available
         {% endif %}

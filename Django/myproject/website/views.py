@@ -17,7 +17,7 @@ from .forms import SignUpForm, LoginFrom # ログインフォームをimport
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-
+"""
 class TopIndex(LoginRequiredMixin,ListView):
     template_name = "website/index.html"
     login_url = '/login'#ログインしていないユーザーのリダイレクト先ログインページ
@@ -49,6 +49,61 @@ class TopIndex(LoginRequiredMixin,ListView):
         context['task_info_list'] = task_info_list
 
         return context
+""" 
+
+class TopIndex(LoginRequiredMixin,ListView):
+    template_name = "website/index.html"
+    login_url = '/login'#ログインしていないユーザーのリダイレクト先ログインページ
+    model = Task
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            # スーパーユーザーはすべてのタスクを取得
+            return Task.objects.all()
+        else:
+            # 一般ユーザーは自分のタスクのみを取得
+            return Task.objects.filter(project__user=self.request.user)
+
+
+    def get_context_data(self,**kwargs):
+
+        context = super().get_context_data(**kwargs)
+
+        tasks = Task.objects.all().order_by('-priority_id')
+        # タスクごとの残り日数を計算してコンテキストに追加する
+        # 今日の日付を抽出
+        today = datetime.now().date()
+        # 残り日数データを保存するリストを作成
+        remaining_days_list = []
+        # 各タスクの期限から今日の日付を引いて、残りに数を抽出
+        for task in tasks:
+             # deadlineがNullでない場合
+            if task.deadline is not None:
+                 remaining_days = (task.deadline - today).days
+
+            else:
+                remaining_days = "-"
+
+            remaining_days_list.append(remaining_days)
+
+        task_info_list = [{'task':task,'remaining_days':remaining_days} for task,remaining_days in zip(tasks,remaining_days_list)]
+
+        context['task_info_list'] = task_info_list
+
+        return context
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
