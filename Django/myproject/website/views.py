@@ -15,6 +15,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView
 from .forms import SignUpForm, LoginFrom # ログインフォームをimport
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import TaskForm
+
 
 
 """
@@ -327,33 +329,71 @@ class ProjectTaskListView(LoginRequiredMixin,ListView):
 
 
 # CreateViewは、新規作成画面を簡単に作るためのView
-class CreateProject(LoginRequiredMixin,CreateView):
+class CreateProject(LoginRequiredMixin, CreateView):
     model = Project
+    fields = ["title", "deadline", "note", "status", "user"]
 
-    # 編集対象にするフィールド
+    def form_valid(self, form):
+        # スーパーユーザーの場合はすべてのユーザーが選択可能
+        if self.request.user.is_superuser:
+            form.instance.user = form.cleaned_data['user']
+        else:
+            # 通常のユーザーの場合はログインユーザーを設定
+            form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # スーパーユーザーの場合はすべてのユーザーを選択できるようにする
+        if self.request.user.is_superuser:
+            form.fields['user'].queryset = User.objects.all()
+    
+        else:
+            form.fields['user'].queryset = User.objects.filter(pk=self.request.user.pk)
+        return form
+
+
+class CreateTask(LoginRequiredMixin, CreateView):
+    model = Task
+    form_class = TaskForm  # カスタムフォームを指定
+
+    # フォームにログインユーザー情報を渡す
+    def get_form_kwargs(self):
+        kwargs = super(CreateTask, self).get_form_kwargs()
+        kwargs['user'] = self.request.user  # ログインユーザー情報を渡す
+        return kwargs
+
+
+
+class UpdateProject(LoginRequiredMixin,UpdateView):
+    template_name = "website/project_update.html"
+    model = Project
     fields = ["title","deadline","note","status","user"]
 
 
 
-class Create(LoginRequiredMixin,CreateView):
-    model = Task
-
-    # 編集対象にするフィールド
-    fields = ["title","deadline","note","status","project", "workload","priority"]
-
-
-
-class Update(LoginRequiredMixin,UpdateView):
+class UpdateTask(LoginRequiredMixin,UpdateView):
+    template_name = "website/task_update.html"
     model = Task
     fields = ["title","deadline","note","status","project", "workload","priority"]
     
 
+class DeleteProject(LoginRequiredMixin,DeleteView):
+    model = Project
 
-class Delete(LoginRequiredMixin,DeleteView):
+    # 削除したあとに移動する先（トップページ）
+    success_url = "/index"
+
+
+
+
+class DeleteTask(LoginRequiredMixin,DeleteView):
     model = Task
 
     # 削除したあとに移動する先（トップページ）
-    success_url = "/"
+    success_url = "/index"
+
+
 
 def UserList(request):
     user_with_counts = User.objects.annotate(
