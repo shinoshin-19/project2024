@@ -13,7 +13,7 @@
                   <a class="nav-item nav-link" href="/task">タスク一覧</a>
                   <a class="nav-item nav-link" href="/createproject">プロジェクト新規</a>
                   <a class="nav-item nav-link" href="/createtask">タスク新規</a>
-                <div class="h3"> {{ user.name }}</div>
+                  <div class="h5" style="color: white;">{{ user.name }}</div>
                 <!-- ↓追加 -->
                 <form action="/logout" method="post">
                     {% csrf_token %}

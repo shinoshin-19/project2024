@@ -16,6 +16,7 @@ from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as 
 from .forms import SignUpForm, LoginFrom # ログインフォームをimport
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import TaskForm
+from django import forms
 
 
 
@@ -64,7 +65,7 @@ class TopIndex(LoginRequiredMixin,ListView):
             return Task.objects.all()
         else:
             # 一般ユーザーは自分のタスクのみを取得
-            return Task.objects.filter(project__user=self.request.user)
+            return Task.objects.filter(project__user=self.request.user, status__title__iexact='完了')
 
 
     def get_context_data(self,**kwargs):
@@ -347,9 +348,12 @@ class CreateProject(LoginRequiredMixin, CreateView):
         # スーパーユーザーの場合はすべてのユーザーを選択できるようにする
         if self.request.user.is_superuser:
             form.fields['user'].queryset = User.objects.all()
-    
         else:
             form.fields['user'].queryset = User.objects.filter(pk=self.request.user.pk)
+        
+        # Statusの選択肢をタイトルで表示
+        form.fields['status'] = forms.ModelChoiceField(queryset=Status.objects.all(), to_field_name='title')
+        
         return form
 
 

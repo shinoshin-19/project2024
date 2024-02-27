@@ -74,6 +74,9 @@ class Status(models.Model):
         blank = False,
         null = False,
     )
+    
+    def __str__(self):
+        return self.title
 
 
 class Priority(models.Model):
