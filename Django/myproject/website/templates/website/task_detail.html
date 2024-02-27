@@ -25,9 +25,9 @@
             <td>{{ task.title }}</td>
             <td>{{ task.deadline }}</td>
             <td>{{ remaining_days }} </td>
-            <td>{{ task_note }}</td>
-            <td>{{ project_title }}</td>
-            <td>{{ task_status }}</td>
+            <td>{{ task.note |linebreaks }}</td>
+            <td>{{ task.project.title }}</td>
+            <td>{{ task.status }}</td>
             <td>{{ task.created }}</td>
             <td>{{ task.updated }}</td>
         </tr>

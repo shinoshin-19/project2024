@@ -30,7 +30,7 @@
             <!-- 期限と残日数の表示 -->
             <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.deadline }}</a></td>
             <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.remaining_days }}</a></td>
-            <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.note }}</a></td>
+            <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.note|linebreaks }}</a></td>
             <!-- プロジェクト名とステータスの表示 -->
             <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.project.title }}</a></td>
             <td><a href="{% url 'detailtask' task_info.task.id %}">{{ task_info.task.status.title }}</a></td>
